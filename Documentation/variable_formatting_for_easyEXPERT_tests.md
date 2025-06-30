@@ -10,14 +10,21 @@ These are the possible variables:
 * `'Vtgs'`: top gate source voltage
 * `'Vbgs'`: bottom gate source voltage
 * `'Vds'`: drain-source voltage
-* `'R'` or `'Rds'`: drain-source resistance (called drain resistance or just reistance)
-* `'I'` or `'Id'`: drain-source current (called drain current)
-* `'Rgs'`: gate-source resistance (not yet implemented)
-* `'Igs'`: gate-source current (not yet implemented)
+* `'R'`, `'Rd'`, or `'Rds'`: drain-source resistance (called drain resistance or just reistance)
+* `'I'`, `'Id'`, or `'Ids'`: drain-source current (called drain current)
+
+Not yet implemented variables:
+* `'Rbg'` or `'Rbgs'`: bottom-gate-source resistance (not yet implemented)
+* `'Rtg'` or `'Rtgs'`: top-gate-source resistance (not yet implemented)
+* `'Ig'` or `'Igs'`: gate-source current (not yet implemented)
+* `'Itg'` or `'Itgs'`: top-gate-source current (not yet implemented)
+* `'Ibg'` or `'Ibgs'`: bottom-gate-source current (not yet implemented)
 
 These variable names then get automatically turned into labels if the `DataBank.auto_labels` parameter is set to `True`. The variables then automatically become the following labels.
 Variable Name to corresponding Auto-Label output:
-* `'Vgs'`, `'Vtgs'`, `'Vbgs'` => 'Gate Voltage $V_{GS}$ (V)': 
+* `'Vgs'`, `'Vtgs'`, `'Vbgs'` => 'Gate Voltage $V_{GS}$ (V)':
+* `'Vtgs'` => 'Top Gate Voltage $V_{GS}$ (V)':
+* `'Vbgs'` => 'Bottom Gate Voltage $V_{GS}$ (V)': 
 * `'Vds'` => 'Drain-Source Voltage $V_{DS}$ (V)'
 * `'R'` => 'Resistance $R_D$ (Ω)'
 * `'Rk'` => 'Resistance $R_D$ (kΩ)'
@@ -80,11 +87,11 @@ If you want to program a test that measures resistance across the GFET using the
   * `'Vtgs'`: top gate source voltage. This option has no ambiguity and should be chosen over the other choice when appropriate. Use with multi-gate transistor tests.
   * `'Vgs'`: gate-source voltage. If you are working with a transistor with only one gate, this is a fine option. **However,** if operating a multi-gate transistor, this option will not keep track of the gate via the `TransistorDataVisualizer` modeul;  _you must track it independently_ (in note book or something).
 * drain-source current (the dependent variable)
-  * `'Id'`: drain(-source) current. Plots made 
+  * `'Id'`/`'Ids'`: drain(-source) current.  
   * `'I'`: (ambiguous) current -> gets interpreted as drain(-source) current. If `I` is selected, the current is automatically assumed to be the drain current. 
   * Note: plots made with `Id` or `I` using the `auto_labels()` funciton will display the name "Drain Current" rather than "Drain Source Current". 
 * resistance (calculated variable)
-  * `'R'`: (drain-source) resistance. Calculated as the quotient of the drain current and drain-source voltage `R = Id/Vds`. 
+  * `'R'`/`'Rd'`/`'Rds'`: (drain-source) resistance. Calculated as the quotient of the drain current and drain-source voltage `R = Id/Vds`. 
 When the resulting easyEXPERT CSV is parsed by `TransistorDataVisualizer`, it will be able to parse test parameters properly so you can get to plotting with no issues! 
 
 ## File Naming Conventions ##
@@ -93,28 +100,42 @@ When the resulting easyEXPERT CSV is parsed by `TransistorDataVisualizer`, it wi
 If you are curious as to _why_ the variables need to be named in the specific way defined by the CheatSheet section, it's because the creation of auto_labels comes from the following function, which requires the specific names:
 ```
 def make_auto_labels(self, xlbl, ylbl, zlbl):
-        """Returns automatically created labels from 
-        """
-        if ylbl in ['Vgs', 'Vtgs', 'Vbgs']:
-            ylbl = r'Gate Voltage $V_{GS}$ (V)'
-        elif ylbl == 'Vds':
-            ylbl = r'Drain-Source Voltage $V_{DS}$ (V)'
+    """Returns automatically created labels from input labels
+    """
+    if ylbl in ['Vgs']:
+        ylbl = r'Gate Voltage $V_{GS}$ (V)'
+    elif ylbl in ['Vtgs'] and self.override == False:
+        ylbl = r'Top Gate Voltage $V_{TGS}$ (V)'
+    elif ylbl in ['Vbgs'] and self.override == False:
+        ylbl = r'Bottom Gate Voltage $V_{BGS}$ (V)'
+    elif ylbl in ['Vtgs', 'Vbgs'] and self.override == True:
+        ylbl = r'Gate Voltage $V_{GS}$ (V)'
+    elif ylbl == 'Vds':
+        ylbl = r'Drain-Source Voltage $V_{DS}$ (V)'
 
-        if xlbl in ['Vgs', 'Vtgs', 'Vbgs']:
-            xlbl = r'Gate Voltage $V_{GS}$ (V)'
-        elif xlbl == 'Vds':
-            xlbl = r'Drain-Source Voltage $V_{DS}$ (V)'
+    if xlbl in ['Vgs']:
+        xlbl = r'Gate Voltage $V_{GS}$ (V)'
+    elif xlbl in ['Vtgs'] and self.override == False:
+        xlbl = r'Top Gate Voltage $V_{TGS}$ (V)'
+    elif xlbl in ['Vbgs'] and self.override == False:
+        xlbl = r'Bottom Gate Voltage $V_{BGS}$ (V)'
+    elif xlbl in ['Vtgs', 'Vbgs'] and self.override == True:
+        xlbl = r'Gate Voltage $V_{GS}$ (V)'
+    elif xlbl == 'Vds':
+        xlbl = r'Drain-Source Voltage $V_{DS}$ (V)'
 
-        if zlbl == 'R':
-            zlbl = r'Resistance $R_D$ (Ω)'
-        elif zlbl == 'Rk':
-            zlbl = r'Resistance $R_D$ (kΩ)'
-        elif zlbl in ['I', 'Id']:
-            zlbl = r'Drain Current $I_D$ (A)'
-        elif zlbl == 'Im':
-            zlbl = r'Drain Current $I_D$ (mA)'
-        elif zlbl == 'Iu':
-            zlbl = r'Drain Current $I_D$ (μA)'
-        lbls = [xlbl, ylbl, zlbl]
-        return lbls
+    if zlbl in ['R', 'Rd', 'Rds']:
+        zlbl = r'Resistance $R_{DS}$ (Ω)'
+    elif zlbl in ['Rk']:
+        zlbl = r'Resistance $R_{DS}$ (kΩ)'
+    elif zlbl in ['I', 'Id', 'Ids']:
+        zlbl = r'Drain Current $I_{DS}$ (A)'
+    elif zlbl == 'Im':
+        zlbl = r'Drain Current $I_{DS}$ (mA)'
+    elif zlbl == 'Iu':
+        zlbl = r'Drain Current $I_{DS}$ (μA)'
+    elif zlbl in ['div', "RP"]:
+        zlbl = r'Relative Performance'
+    lbls = [xlbl, ylbl, zlbl]
+    return lbls
 ```
