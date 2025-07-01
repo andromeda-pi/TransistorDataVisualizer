@@ -1,0 +1,55 @@
+{
+"devices": [
+    {
+        "number":2,
+        "serial_number":"P25247",
+        "model":"S31",
+        "length":50,
+        "width":50,
+        "area":2500
+    },
+
+    {
+        "number":3,
+        "serial_number":"P25246",
+        "model":"S31",
+        "length":100,
+        "width":100,
+        "area":10000
+    },
+
+    {
+        "number":4,
+        "serial_number":"P25245",
+        "model":"S31",
+        "length":50,
+        "width":50,
+        "area":2500
+    },
+    {
+        "number":6,
+        "serial_number":"P25244",
+        "model":"S31",
+        "length":200,
+        "width":200,
+        "area":40000
+    },
+
+    {
+        "number":7,
+        "serial_number":"P25243",
+        "model":"S31",
+        "length":50,
+        "width":50,
+        "area":2500
+    },
+
+    {
+        "number":8,
+        "serial_number":"P25242",
+        "model":"S31",
+        "length":50,
+        "width":50,
+        "area":2500
+    }]
+}
