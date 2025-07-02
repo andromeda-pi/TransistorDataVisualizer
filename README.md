@@ -32,12 +32,22 @@ B.print_indices()
 * `File`: Used to quickly and unaesthetically plot data for quick checks of data integrity. 
 * `DataSet`: Is built on top of a `File` and has more features. Used to store data and configure individual plotting preferences. Has 1 main plotting functions:
     * `quick_plot3d(Zindex:int, connectors:bool = True)`: Plots the data at the selected Zindex against against the x- and y-axes in 3D as a wireframe. Zindex simply corresponds to the data headers in the order they appear. 
-* `DataBank`: Can have `DataSets` added or removed via its `append()` or `pop()` methods. Is the primary mode for plotting tests and has robust features: plotting, domain restriciton, and aesthetic changes. 
+* `DataBank`: Can have `DataSets` added or removed via its `append()` or `pop()` methods. It is the old mode for plotting multilpe tests and the following features: plotting, domain restriciton, and some aesthetic changes. 
     For its plotting functions:
     * `quick_plot3d(Zindex)`: Quickly plots data on its selected domain using the Zindex corresponding to each `DataSet`'s headers. 
     * `quick_plot2d(x_idx, y_idx)`: Given the x-axis for a 2d plot and a y-axis (typically conceptualzied as the Zindex for a 3d plot) for a 2d plot, the excluded independent variable is collapsed down and represented in grey-scale.
     * `quick_div_plot3d(DivSet: DataSet, divIdx)`: Creates a plot of the `DataBank` relative to the dividing `DataSet` with additional, potential parameters.   
 For more information, see each data structure's section below.  
+* `Plotter`: Built upon the `DataBank`. Can have `DataSets` added or removed via its `append()` or `pop()` methods. Is the primary mode for plotting tests and has robust features: plotting, domain restriciton, and colormapping. 
+    For its plotting functions:
+    * `quick_plot3d(Zindex)`: Quickly plots data on its selected domain using the Zindex corresponding to each `DataSet`'s headers. 
+    * `quick_plot2d(x_idx, y_idx,  **kwargs)`: Adds attional functionality to `DataBank`'s `quick_plot2d` function. Has powerful `kwarg`s that enable customization, the most useful one being the `cmap` `kwarg`, enabling usage of `matplotlib` colormaps. 
+    * `quick_div_plot3d(DivSet: DataSet, divIdx)`: Creates a plot of the `DataBank` relative to the dividing `DataSet` with additional, potential parameters.   
+For more information, see each data structure's section below.
+    * `quick_div_plot2d(x_idx, y_idx, DivSet: DataSet, divIdx, **kwargs)`: Combination of `quick_div_plot3d` and `quick_plot2d`. Accepts `cmap` `kwarg`. 
+    * `cmap_quick_plot3d(x_idx, y_idx, cmap=None, **kwargs)`: Brings colormapping to 3D!
+
+  Again, check out the documentation for more indepth stuff!
 
 ## Providing Function Indices
 Many funcitons will ask for an index. The `File` structure of parsed CSV data is as so stored in a datadictionary contaning the data correpsonding to the headers. The the index then is simply the integer index into the headers list. For example:
