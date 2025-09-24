@@ -1,6 +1,6 @@
 # TransistorDataVisualizer
 A Python Library for the Characterization of the Graphene Field-Effect Transistor. 
-Check out the [thesis][[https://ir.library.oregonstate.edu/concern/undergraduate_thesis_or_projects/jq085v314]!
+Check out the [thesis](https://ir.library.oregonstate.edu/concern/undergraduate_thesis_or_projects/jq085v314)!
 Check out the documentation for more concise information! 
 
 ## Quick Start
